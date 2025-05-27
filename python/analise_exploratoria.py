@@ -9,8 +9,8 @@
 # - [25-03-2025], [Gustavo], [Configuração da transcrição]
 # - [26-03-2025], [Gustavo], [Configuração do modelo whisper]
 # - [26-03-2025], [Gustavo], [Adiciondo toda a análise exploratória]
-# - [28-03-2025], [Felipe], [Configuração da dos gráficos]
-# - [28-03-2025], [Felipe], [Ajustes/Tramentamento dos dados]
+# - [28-03-2025], [Felippe], [Configuração da dos gráficos]
+# - [28-03-2025], [Felippe], [Ajustes/Tramentamento dos dados]
 # ============================================================
 
 import pandas as pd

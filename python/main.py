@@ -6,8 +6,8 @@
 # O objetivo é compreender as características dos dados e preparar para a modelagem posterior.
 # Histórico de alterações:
 # - [23-03-2025], [Gustavo], [Configuração do modelo whisper]
-# - [24-03-2025], [Felipe], [Configuração da transcrição]
-# - [24-03-2025], [Felipe], [Ajuste na leitura dos arquivos de áudio]
+# - [24-03-2025], [Felippe], [Configuração da transcrição]
+# - [24-03-2025], [Felippe], [Ajuste na leitura dos arquivos de áudio]
 # ============================================================
 
 import time
@@ -15,6 +15,9 @@ import torch
 from faster_whisper import WhisperModel
 from datetime import datetime
 from pathlib import Path
+import pandas as pd
+import random
+import subprocess
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model_size = "base"
@@ -22,7 +25,7 @@ compute_type = "float16" if device == "cuda" else "float32"
 
 model = WhisperModel(model_size, device=device, compute_type=compute_type)
 
-audio_dir = Path("/dataset")
+audio_dir = Path("./dataset")
 
 if not audio_dir.exists():
     print(f"Pasta '{audio_dir}' não encontrada!")
@@ -53,3 +56,23 @@ for result in results:
     print("\nArquivo:", result["file"])
     print("Tempo de processamento:", round(result["processing_time"], 2), "segundos")
     print("Transcrição:", result["transcription"])
+
+# Salvar os resultados em CSV
+df = pd.DataFrame(results)
+df.to_csv("./results/transcricoes_resultados.csv", index=False)
+print("Transcrições salvas em: ./results/transcricoes_resultados.csv")
+
+# Categorias fictícias típicas de cold calls de investimento
+categorias = ['interessado', 'recusa', 'pedido_de_informacao', 'desligou', 'sem_resposta']
+random.seed(42)  # Para reprodutibilidade
+
+# Adiciona uma nova coluna com rótulo aleatório
+df['label'] = [random.choice(categorias) for _ in range(len(df))]
+
+# Salva novamente com rótulos
+df.to_csv("./results/transcricoes_com_rotulos.csv", index=False)
+print("Arquivo com rótulos salvo em: ./results/transcricoes_com_rotulos.csv")
+
+# Executando o arquivo classificacao_textual.py
+print("Executando pipeline de classificação...")
+subprocess.run(["python", "python/classificacao_textual.py"])
